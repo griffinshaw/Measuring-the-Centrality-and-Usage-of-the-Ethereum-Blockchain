@@ -1,0 +1,4 @@
+with recent_succesful_transactions as (
+SELECT value  FROM `blockchain-centrality.Starting_Databases_May_1_2020.traces` where error is null and block_number >= 5500000 #Apr-24-2018, ~2 years ago
+)
+select (select sum(value) from recent_succesful_transactions) as recent_money_flow, (select sum(value) from `blockchain-centrality.Starting_Databases_May_1_2020.traces`) as total_money_flow

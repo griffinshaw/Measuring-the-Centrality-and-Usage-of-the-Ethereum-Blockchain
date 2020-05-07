@@ -1,0 +1,1 @@
+SELECT Min(times_invoked) as min, Max(times_invoked) as max, AVG(times_invoked) as average, STDDEV_POP(times_invoked) as standard_deviation, VAR_POP(times_invoked) as variance FROM `blockchain-centrality.contract_analysis.linked_library_statistisc`

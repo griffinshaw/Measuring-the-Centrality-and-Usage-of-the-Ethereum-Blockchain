@@ -1,0 +1,3 @@
+SELECT from_address, Max(block_number) as most_recent_block
+FROM `bigquery-public-data.crypto_ethereum.transactions` 
+Group by from_address 

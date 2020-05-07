@@ -1,0 +1,17 @@
+with inactive as (
+SELECT * FROM `blockchain-centrality.balances.balances_all_metrics` where most_recent_send is null
+),
+dormant as (
+SELECT * FROM `blockchain-centrality.balances.balances_all_metrics` where most_recent_send < 5500000 #Apr-24-2018, ~2 years ago
+),
+active as (
+  SELECT * FROM `blockchain-centrality.balances.balances_all_metrics` where most_recent_send >= 5500000 #Apr-24-2018, ~2 years ago
+)
+select 
+(SELECT Count(address) FROM inactive) as inactive_accounts, 
+(Select Count(address) FROM dormant) as dormant_accounts, 
+(Select Count(address) FROM active) as active_accounts, 
+(SELECT SUM(eth_balance) FROM inactive) as inactive_wealth, 
+(Select SUM(eth_balance) FROM dormant) as dormant_wealth, 
+(Select SUM(eth_balance) FROM active) as active_wealth, 
+(Select SUM(eth_balance) FROM `blockchain-centrality.balances.balances_all_metrics`) as total_wealth

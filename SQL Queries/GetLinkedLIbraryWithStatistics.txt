@@ -1,0 +1,37 @@
+#standardSQL
+CREATE TEMP FUNCTION
+  extract_libraries(bytecode string)
+  RETURNS ARRAY<string>
+  LANGUAGE js AS """
+  return getLibrary(bytecode);
+  """ OPTIONS ( library="gs://blockchain-centrality-libraries/getLibraries.js" );
+WITH
+  libraires_in_bytecode AS (
+  SELECT
+    extract_libraries(bytecode) AS libraries
+  FROM
+    `blockchain-centrality.Starting_Databases_May_1_2020.contracts` ),
+    
+  libraries AS (
+  SELECT
+    DISTINCT library as address
+  FROM
+    libraires_in_bytecode
+  CROSS JOIN
+    UNNEST(libraires_in_bytecode.libraries) AS library
+  WHERE
+    ARRAY_LENGTH(libraries) > 0 ),
+    
+  library_contracts as (
+    select  contracts.* from libraries left join `blockchain-centrality.Starting_Databases_May_1_2020.contracts` as contracts on CONCAT("0x", libraries.address) = contracts.address
+  ),
+  invokes as (
+  select to_address, count(to_address) as times_invoked  from `blockchain-centrality.Starting_Databases_May_1_2020.traces` group by to_address 
+  ),
+  libraries_with_statisitcs as (
+  select library_contracts.*,  times_invoked from library_contracts Inner Join invokes on address = to_address
+  )
+SELECT
+  *
+FROM
+  libraries_with_statisitcs 

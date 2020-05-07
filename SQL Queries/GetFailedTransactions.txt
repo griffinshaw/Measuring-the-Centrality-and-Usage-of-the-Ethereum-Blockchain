@@ -1,0 +1,1 @@
+SELECT * FROM `blockchain-centrality.Starting_Databases_May_1_2020.transactions` where receipt_status = 0

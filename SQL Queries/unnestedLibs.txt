@@ -1,0 +1,8 @@
+with libs as (
+select *
+from `blockchain-centrality.contract_analysis.potentially_linked_libraries`
+)
+
+select Distinct lib
+from libs
+cross join unnest(libs.libraries) as lib

@@ -1,0 +1,21 @@
+#standardSQL
+CREATE TEMP FUNCTION
+  extract_libraries(bytecode string)
+  RETURNS ARRAY<string>
+  LANGUAGE js AS """
+  return getLibrary(bytecode);
+  """ OPTIONS ( library="gs://blockchain-centrality-libraries/getLibraries.js" );
+WITH
+  contracts AS (
+  SELECT
+    address,
+    extract_libraries(bytecode) AS libraries
+  FROM
+    `blockchain-centrality.Starting_Databases_May_1_2020.contracts` 
+    )
+SELECT
+  *
+FROM
+  contracts
+WHERE
+  ARRAY_LENGTH(libraries) > 0

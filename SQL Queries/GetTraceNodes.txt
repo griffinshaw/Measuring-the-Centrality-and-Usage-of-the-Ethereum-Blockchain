@@ -1,0 +1,10 @@
+with distinct_from_addresses as (
+SELECT from_address as address  FROM `bigquery-public-data.crypto_ethereum.traces` group by from_address
+),
+distinct_to_addresses as (
+SELECT to_address as address  FROM `bigquery-public-data.crypto_ethereum.traces` group by to_address
+)
+
+SELECT to_address as address  FROM `bigquery-public-data.crypto_ethereum.traces`
+Union distinct
+SELECT from_address as address  FROM `bigquery-public-data.crypto_ethereum.traces`

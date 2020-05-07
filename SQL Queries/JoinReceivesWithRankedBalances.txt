@@ -1,0 +1,4 @@
+SELECT address, eth_balance,  percent_of_wealth, most_recent_send_block, most_recent_block as most_recent_recieve_block, 
+FROM `blockchain-centrality.balances.nonzero_balances_with_sends` 
+Left Join `blockchain-centrality.balances.MostRecentRecieveTransactions` 
+on address = to_address

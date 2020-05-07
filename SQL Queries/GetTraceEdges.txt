@@ -1,0 +1,12 @@
+with combined_address_identifiers as (
+select from_address, to_address, Concat(from_address, ",", to_address) as id
+FROM `blockchain-centrality.Starting_Databases_May_1_2020.traces`
+),
+id_counts as (
+select id, count(id) as occurences from `combined_address_identifiers` group by id
+),
+distinct_ids as (
+select distinct(id) as d_id, from_address, to_address from `combined_address_identifiers`
+)
+
+SELECT from_address, to_address, occurences FROM distinct_ids left join id_counts on d_id = id
