@@ -1,0 +1,18 @@
+#standardSQL
+CREATE TEMP FUNCTION
+  compare(bytecode1 string, bytecode2 string)
+  RETURNS FLOAT64
+  LANGUAGE js AS """
+  return checkSimilarity(bytecode1, bytecode2);
+  """ OPTIONS ( library="gs://blockchain-centrality-javascript-udfs/fingerprintTools.js" );
+
+with top_contracts as(
+select * from `blockchain-centrality.contract_analysis.contracts_with_nonzero_balance` order by eth_balance desc limit 100
+#SELECT contracts.*, balances.eth_balance FROM `blockchain-centrality.Starting_Databases_May_1_2020.contracts` as contracts Inner join `blockchain-centrality.Starting_Databases_May_1_2020.balances` as balances on contracts.address = balances.address where balances.eth_balance >0 order by #eth_balance limit 100
+),
+
+pairwiseComparison as (
+select compare(contractsA.bytecode, contractsB.bytecode) as similarity_score, contractsA.address as a, contractsB.address as b
+from top_contracts as contractsA inner join top_contracts as contractsB on contractsA.address  != contractsB.address
+)
+select * from pairwiseComparison 

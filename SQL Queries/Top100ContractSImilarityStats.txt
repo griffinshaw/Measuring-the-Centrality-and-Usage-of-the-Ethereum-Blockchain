@@ -1,0 +1,1 @@
+SELECT Min(similarity_score) as min, max(similarity_score) as max, avg(similarity_score) as avg, stddev(similarity_score) as stdev FROM `blockchain-centrality.contract_analysis.top_100_similarity` 

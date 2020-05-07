@@ -1,0 +1,35 @@
+with nonzero_balances as
+(
+select * 
+from `Starting_Databases_May_1_2020.balances`
+where eth_balance > 0
+), 
+
+with_percent as (
+select *, eth_balance/(SELECT SUM(eth_balance) from nonzero_balances) as percentage_of_total_wealth
+from nonzero_balances 
+),
+
+most_recent_sends as (
+SELECT from_address, Max(block_number) as most_recent_send 
+FROM `Starting_Databases_May_1_2020.traces` 
+Group by from_address
+),
+
+most_recent_recieves as (
+SELECT to_address, Max(block_number) as most_recent_recieve
+FROM `Starting_Databases_May_1_2020.traces` 
+Group by to_address
+),
+
+balances_with_sends as (
+select with_percent.*, most_recent_send
+from with_percent left join most_recent_sends on address = from_address
+),
+
+balances_with_sends_and_recieves as (
+select balances_with_sends.*, most_recent_recieve
+from balances_with_sends left join most_recent_recieves on address = to_address
+)
+
+select * from balances_with_sends_and_recieves  

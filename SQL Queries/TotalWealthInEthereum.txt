@@ -1,0 +1,2 @@
+select SUM(eth_balance) as total_wealth
+from `bigquery-public-data.crypto_ethereum.balances`

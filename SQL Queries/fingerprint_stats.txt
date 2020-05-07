@@ -1,0 +1,1 @@
+SELECT min(logical_duplicates) as min, max(logical_duplicates) as max, avg(logical_duplicates) as avg, stddev(logical_duplicates) as stddev FROM `blockchain-centrality.contract_analysis.fingerprinted_contracts`

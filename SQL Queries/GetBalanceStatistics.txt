@@ -1,0 +1,1 @@
+SELECT Min(eth_balance) as min, Max(eth_balance) as max, AVG(eth_balance) as average, STDDEV_POP(eth_balance) as standard_deviation, VAR_POP(eth_balance) as variance FROM `blockchain-centrality.Starting_Databases_May_1_2020.balances`

@@ -1,0 +1,1 @@
+SELECT eth_balance as mode, count(eth_balance) FROM `blockchain-centrality.Starting_Databases_May_1_2020.balances` group by eth_balance order by count(eth_balance) desc limit 1
